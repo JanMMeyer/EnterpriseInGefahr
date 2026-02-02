@@ -1,14 +1,15 @@
-import { GameConfig } from "../Game";
 import { useContext } from "react";
 import { GameStateContext } from "../state/GameStateContext";
-import { Ship } from "./shared/Ship";
+import { ShipAvatar } from "./shared/ShipAvatar";
 
 export function FederationShip() {
-  const { federationShipPosition } = useContext(GameStateContext);
+  const { federationShip } = useContext(GameStateContext);
 
   return (
-    <Ship
-		position={federationShipPosition}
+    <ShipAvatar
+		type="federation"
+		orientation="right"
+		position={federationShip.position}
 		imgSrc="/icons8-enterprise-ncc-1701-d-100.png"
 		imgRotation={90}
 		imgScale={0.85} /> 

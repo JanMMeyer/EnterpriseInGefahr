@@ -1,39 +1,44 @@
 import { useState } from "react";
-import type { GameState, GameStateActions, ShipPosition } from "./GameState.interface";
+import type { GameState, GameStateActions } from "./GameState.type";
+import type { Ship, ShipPosition, ShipType } from "../ships/shared/Ship.type";
 import { GameConfig } from "../Game";
 
 export function useGameState(): GameState & GameStateActions {
-	const [federationShipPosition, setFederationShipPosition] = useState({ x: 1, y: 1 });
-	const [klingonShipPosition, setKlingonShipPosition] = useState({ x: GameConfig.cols, y: GameConfig.rows });
+	const [federationShip, setFederationShip] = useState<Ship>({ type: "federation", position: { x: 1, y: 1 }, orientation: "right" });
+	const [klingonShip, setKlingonShip] = useState<Ship>({ type: "klingon", position: { x: GameConfig.cols, y: GameConfig.rows }, orientation: "left" });
 	const [activeShip, setActiveShip] = useState<"federation" | "klingon">("federation");
 
-	const moveFederationShip = (direction: "up" | "down" | "left" | "right") => {
-		moveShip(setFederationShipPosition, direction);
-	};
-	const moveKlingonShip = (direction: "up" | "down" | "left" | "right") => {
-		moveShip(setKlingonShipPosition, direction);
+	const moveShip = (type: ShipType, numberOfCells: number) => {
+		const setStateFn = type === "federation" ? setFederationShip : setKlingonShip;
+		updateShipPosition(setStateFn, numberOfCells);
 	};
 
 	return {
-		federationShipPosition,
-		klingonShipPosition,
+		federationShip,
+		klingonShip,
 		activeShip,
-		moveFederationShip,
-		moveKlingonShip,
+		moveShip,
 		setActiveShip,
 	};
 }
 
-function moveShip(setPosition: (stateFn: (prev: ShipPosition) => ShipPosition) => void,  direction: "up" | "down" | "left" | "right") {
-	
-	switch (direction) {
-		case "up":
-			return setPosition((position) => ({ ...position, y: Math.max(1, position.y - 1) }));
-		case "down":
-			return setPosition((position) => ({ ...position, y: Math.min(GameConfig.rows, position.y + 1) }));
-		case "left":		
-			return setPosition((position) => ({ ...position, x: Math.max(1, position.x - 1) }));
-		case "right":
-			return setPosition((position) => ({ ...position, x: Math.min(GameConfig.cols, position.x + 1) }));
-	}
+function updateShipPosition(setShip: (stateFn: (prev: Ship) => Ship) => void,  numberOfCells: number) {
+	setShip((ship) => {
+		const newPosition = { ...ship.position };
+		switch (ship.orientation) {
+			case "up":
+				newPosition.y = Math.max(1, ship.position.y - numberOfCells);
+				break;
+			case "down":
+				newPosition.y = Math.min(GameConfig.rows, ship.position.y + numberOfCells);
+				break;
+			case "left":		
+				newPosition.x = Math.max(1, ship.position.x - numberOfCells);
+				break;
+			case "right":
+				newPosition.x = Math.min(GameConfig.cols, ship.position.x + numberOfCells);
+				break;
+		}
+		return { ...ship, position: newPosition };
+	})
 }

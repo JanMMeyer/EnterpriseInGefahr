@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import type { GameState, GameStateActions } from "./GameState.interface";
+import type { GameState, GameStateActions } from "./GameState.type";
 import { GameConfig } from "../Game";
 
 export const GameStateContext = createContext<GameState & GameStateActions>({

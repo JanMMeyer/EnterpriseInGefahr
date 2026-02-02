@@ -1,6 +1,8 @@
 import { Board } from "./board/Board";
+import { EntMoveOneFwdCard } from "./cards/EntMoveFwdOne";
+import { EntMoveTwoFwdCard } from "./cards/EntMoveFwdTwo copy";
 import { CardArea } from "./cards/shared/CardArea";
-import { MoveFwdOneCard } from "./cards/MoveFwdOne";
+
 import { FederationShip } from "./ships/FederationShip";
 import { GameStateContext } from "./state/GameStateContext";
 import { useGameState } from "./state/useGameState";
@@ -12,14 +14,13 @@ export const GameConfig = {
 }
 
 export function Game() {
-  const { federationShipPosition, klingonShipPosition, activeShip, moveFederationShip, moveKlingonShip, setActiveShip } = useGameState();
+  const { federationShip, klingonShip, activeShip, moveShip, setActiveShip } = useGameState();
   return (
 	<GameStateContext value={{
-	  federationShipPosition,
-	  klingonShipPosition,
+	  federationShip,
+	  klingonShip,
 	  activeShip,
-	  moveFederationShip,
-	  moveKlingonShip,
+	  moveShip,
 	  setActiveShip,
 	}}>
 		<div 
@@ -27,7 +28,8 @@ export function Game() {
 			style={{ minWidth: GameConfig.cols * GameConfig.cellSize + 200 }}
 		>
 			<CardArea>
-				<MoveFwdOneCard />
+				<EntMoveOneFwdCard />
+				<EntMoveTwoFwdCard />
 			</CardArea>
 			<Board>
 				<FederationShip />
