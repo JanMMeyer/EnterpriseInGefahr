@@ -1,17 +1,18 @@
 import { GameConfig } from "~/game/Game";
 import type { Ship } from "./Ship.type";
+import { shipTypeToImgSrc } from "./shipTypeToImgSrc";
 
-export type ShipProps = Ship &{
-  imgSrc: string;
+export type ShipProps = Ship & {
   imgRotation: number;
-  imgScale: number;
+  imgScale?: number;
 };
 
-export function ShipAvatar({ position, orientation, imgSrc, imgRotation, imgScale }: ShipProps) {
+export function ShipAvatar({ type, position, orientation, imgRotation, imgScale = 0.85 }: ShipProps) {
+
 const shipRotation = orientation === 'up' ? -90 : orientation === 'down' ? 90 : orientation === 'left' ? 180 : 0;
   return (
     <img
-      src={imgSrc}
+      src={shipTypeToImgSrc.get(type)}
       style={{
         width: GameConfig.cellSize * imgScale,
         height: GameConfig.cellSize * imgScale,

@@ -1,12 +1,10 @@
 import { createContext } from "react";
 import type { GameState, GameStateActions } from "./GameState.type";
-import { GameConfig } from "../Game";
 
 export const GameStateContext = createContext<GameState & GameStateActions>({
-  federationShipPosition: { x: 1, y: 1 },
-  klingonShipPosition: { x: 1, y: 1 },
+  federationShip: { faction: "federation", type: "entD", position: { x: 1, y: 1 }, orientation: "right",  },
+  klingonShip: { faction: "klingon",type: "vorCha", position: { x: 1, y: 1 }, orientation: "left" },
   activeShip: "federation",
-  moveFederationShip: () => {},
-  moveKlingonShip: () => {},
+  moveShip: () => {},
   setActiveShip: () => {},
 });

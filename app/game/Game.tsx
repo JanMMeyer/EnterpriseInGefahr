@@ -4,6 +4,7 @@ import { EntMoveTwoFwdCard } from "./cards/EntMoveFwdTwo copy";
 import { CardArea } from "./cards/shared/CardArea";
 
 import { FederationShip } from "./ships/FederationShip";
+import { KlingonShip } from "./ships/KlingonShip";
 import { GameStateContext } from "./state/GameStateContext";
 import { useGameState } from "./state/useGameState";
 
@@ -33,6 +34,7 @@ export function Game() {
 			</CardArea>
 			<Board>
 				<FederationShip />
+				<KlingonShip />
 			</Board>
 		</div>
 	</GameStateContext>

@@ -4,13 +4,17 @@ import type { Ship, ShipPosition, ShipType } from "../ships/shared/Ship.type";
 import { GameConfig } from "../Game";
 
 export function useGameState(): GameState & GameStateActions {
-	const [federationShip, setFederationShip] = useState<Ship>({ type: "federation", position: { x: 1, y: 1 }, orientation: "right" });
-	const [klingonShip, setKlingonShip] = useState<Ship>({ type: "klingon", position: { x: GameConfig.cols, y: GameConfig.rows }, orientation: "left" });
+	const [federationShip, setFederationShip] = useState<Ship>({ faction: "federation", position: { x: 1, y: 1 }, orientation: "right" });
+	const [klingonShip, setKlingonShip] = useState<Ship>({ faction: "klingon", position: { x: GameConfig.cols, y: GameConfig.rows }, orientation: "left" });
 	const [activeShip, setActiveShip] = useState<"federation" | "klingon">("federation");
 
 	const moveShip = (type: ShipType, numberOfCells: number) => {
 		const setStateFn = type === "federation" ? setFederationShip : setKlingonShip;
 		updateShipPosition(setStateFn, numberOfCells);
+	};
+
+	const setFederationShipType = (type: ShipType) => {
+		setFederationShip({ ...federationShip, type });
 	};
 
 	return {
@@ -19,6 +23,7 @@ export function useGameState(): GameState & GameStateActions {
 		activeShip,
 		moveShip,
 		setActiveShip,
+		setFederationShipType,
 	};
 }
 

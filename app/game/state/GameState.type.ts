@@ -1,11 +1,12 @@
-import type { Ship, ShipType } from "../ships/shared/Ship.type";
+import type { Ship, ShipFaction, ShipType } from "../ships/shared/Ship.type";
 
 export type GameState = {
 	federationShip: Ship;
 	klingonShip: Ship;
-	activeShip: ShipType;
+	activeShip: ShipFaction;
 };
 export type GameStateActions = {
-	moveShip: (type: ShipType, numberOfCells: number) => void;
-	setActiveShip: (ship: ShipType) => void;
+	moveShip: (type: ShipFaction, numberOfCells: number) => void;
+	setFederationShipType: (type: ShipType) => void;
+	setActiveShip: (ship: ShipFaction) => void;
 };
