@@ -2,6 +2,7 @@ import { Board } from "./board/Board";
 import { EntMoveOneFwdCard } from "./cards/EntMoveFwdOne";
 import { EntMoveTwoFwdCard } from "./cards/EntMoveFwdTwo copy";
 import { CardArea } from "./cards/shared/CardArea";
+import { ShipPicker } from "./shipPicker/ShipPicker";
 
 import { FederationShip } from "./ships/FederationShip";
 import { KlingonShip } from "./ships/KlingonShip";
@@ -15,7 +16,7 @@ export const GameConfig = {
 }
 
 export function Game() {
-  const { federationShip, klingonShip, activeShip, moveShip, setActiveShip } = useGameState();
+  const { federationShip, klingonShip, activeShip, moveShip, setActiveShip, setFederationShipType } = useGameState();
   return (
 	<GameStateContext value={{
 	  federationShip,
@@ -23,9 +24,10 @@ export function Game() {
 	  activeShip,
 	  moveShip,
 	  setActiveShip,
+	  setFederationShipType,
 	}}>
 		<div 
-			className="grid grid-cols-[auto_auto_auto] items-center gap-2 h-full bg-cyan-700"
+			className="relative grid grid-cols-[auto_auto_auto] items-center gap-2 h-full bg-cyan-700"
 			style={{ minWidth: GameConfig.cols * GameConfig.cellSize + 200 }}
 		>
 			<CardArea>
@@ -36,6 +38,7 @@ export function Game() {
 				<FederationShip />
 				<KlingonShip />
 			</Board>
+			<ShipPicker open={federationShip.type === null} />
 		</div>
 	</GameStateContext>
   );

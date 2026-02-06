@@ -1,6 +1,6 @@
 import { GameConfig } from "~/game/Game";
 import type { Ship } from "./Ship.type";
-import { shipTypeToImgSrc } from "./shipTypeToImgSrc";
+import { shipTypeToImgSrc } from "../../shared/utils/shipTypeToImgSrc";
 
 export type ShipProps = Ship & {
   imgRotation: number;
@@ -9,8 +9,9 @@ export type ShipProps = Ship & {
 
 export function ShipAvatar({ type, position, orientation, imgRotation, imgScale = 0.85 }: ShipProps) {
 
+if (type === null) return null;
 const shipRotation = orientation === 'up' ? -90 : orientation === 'down' ? 90 : orientation === 'left' ? 180 : 0;
-  return (
+return (
     <img
       src={shipTypeToImgSrc.get(type)}
       style={{

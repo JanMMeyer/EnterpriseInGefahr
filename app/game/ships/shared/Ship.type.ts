@@ -7,5 +7,5 @@ export type Ship = {
 	faction: ShipFaction;
 	position: ShipPosition;
 	orientation: ShipOrientation;
-	type: ShipType;
+	type: ShipType | null;
 }
