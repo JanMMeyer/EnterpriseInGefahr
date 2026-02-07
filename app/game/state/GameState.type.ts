@@ -7,6 +7,7 @@ export type GameState = {
 };
 export type GameStateActions = {
 	moveShip: (type: ShipFaction, numberOfCells: number) => void;
+	rotateShip: (type: ShipFaction, direction: "cw" | "ccw") => void;
 	setFederationShipType: (type: ShipType) => void;
 	setActiveShip: (ship: ShipFaction) => void;
 };

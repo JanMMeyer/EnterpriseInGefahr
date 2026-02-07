@@ -2,14 +2,12 @@ import { useContext } from "react";
 import { GameStateContext } from "../state/GameStateContext";
 import { EntCard } from "./shared/EntCard";
 
-export function EntMoveOneFwdCard() {
-	const { moveShip } = useContext(GameStateContext);
+export function EntRotateCCWCard() {
+	const { rotateShip } = useContext(GameStateContext);
 	return (
-		<EntCard 
-			onClick={() => moveShip("federation", 1)}
-		>
+		<EntCard onClick={() => rotateShip("federation", "ccw")}>
 			<span className="material-symbols-outlined">
-				arrow_forward
+				rotate_left
 			</span>
 		</EntCard>
 	);

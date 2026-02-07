@@ -1,17 +1,17 @@
 import { useContext } from "react";
 import { GameStateContext } from "../state/GameStateContext";
-import { Card } from "./shared/Card";
+import { EntCard } from "./shared/EntCard";
 
 export function EntMoveTwoFwdCard() {
 	const { moveShip } = useContext(GameStateContext);
 	return (
-		<Card onClick={() => moveShip("federation", 2)}>
+		<EntCard onClick={() => moveShip("federation", 2)}>
 			<span className="material-symbols-outlined">
 				arrow_forward
 			</span>
 			<span className="material-symbols-outlined">
 				arrow_forward
 			</span>
-		</Card>
+		</EntCard>
 	);
 }	

@@ -1,6 +1,8 @@
 import { Board } from "./board/Board";
 import { EntMoveOneFwdCard } from "./cards/EntMoveFwdOne";
-import { EntMoveTwoFwdCard } from "./cards/EntMoveFwdTwo copy";
+import { EntMoveTwoFwdCard } from "./cards/EntMoveFwdTwo";
+import { EntRotateCCWCard } from "./cards/EntRotateCCW";
+import { EntRotateCWCard } from "./cards/EntRotateCW";
 import { CardArea } from "./cards/shared/CardArea";
 import { ShipPicker } from "./shipPicker/ShipPicker";
 
@@ -16,13 +18,14 @@ export const GameConfig = {
 }
 
 export function Game() {
-  const { federationShip, klingonShip, activeShip, moveShip, setActiveShip, setFederationShipType } = useGameState();
+  const { federationShip, klingonShip, activeShip, moveShip, rotateShip, setActiveShip, setFederationShipType } = useGameState();
   return (
 	<GameStateContext value={{
 	  federationShip,
 	  klingonShip,
 	  activeShip,
 	  moveShip,
+	  rotateShip,
 	  setActiveShip,
 	  setFederationShipType,
 	}}>
@@ -33,6 +36,8 @@ export function Game() {
 			<CardArea>
 				<EntMoveOneFwdCard />
 				<EntMoveTwoFwdCard />
+				<EntRotateCWCard />
+				<EntRotateCCWCard />
 			</CardArea>
 			<Board>
 				<FederationShip />
