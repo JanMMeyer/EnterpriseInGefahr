@@ -3,6 +3,10 @@ import { EntMoveOneFwdCard } from "./cards/EntMoveFwdOne";
 import { EntMoveTwoFwdCard } from "./cards/EntMoveFwdTwo";
 import { EntRotateCCWCard } from "./cards/EntRotateCCW";
 import { EntRotateCWCard } from "./cards/EntRotateCW";
+import { KlingMoveOneFwdCard } from "./cards/klingCards/KlingMoveFwdOne";
+import { KlingMoveTwoFwdCard } from "./cards/klingCards/KlingMoveFwdTwo";
+import { KlingRotateCWCard } from "./cards/klingCards/KlingRotateCW";
+import { KlingRotateCCWCard } from "./cards/klingCards/KlingtRotateCCW";
 import { CardArea } from "./cards/shared/CardArea";
 import { ShipPicker } from "./shipPicker/ShipPicker";
 
@@ -43,6 +47,12 @@ export function Game() {
 				<FederationShip />
 				<KlingonShip />
 			</Board>
+			<CardArea>
+				<KlingMoveOneFwdCard />
+				<KlingMoveTwoFwdCard />
+				<KlingRotateCWCard />
+				<KlingRotateCCWCard />
+			</CardArea>
 			<ShipPicker open={federationShip.type === null} />
 		</div>
 	</GameStateContext>
