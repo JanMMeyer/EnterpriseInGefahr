@@ -1,4 +1,4 @@
-import type { ShipType } from "../../ships/shared/Ship.type";
+import type { ShipType } from "../types/Ship.type";
 
 
 export const shipTypeToImgSrc: Map<ShipType, string> = new Map([

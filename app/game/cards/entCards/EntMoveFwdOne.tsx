@@ -9,7 +9,7 @@ export function EntMoveOneFwdCard() {
 			onClick={() => moveShip("federation", 1)}
 		>
 			<span className="material-symbols-outlined">
-				arrow_forward
+				arrow_upward
 			</span>
 		</EntCard>
 	);

@@ -10,7 +10,7 @@ export function KlingMoveOneFwdCard() {
 			onClick={() => moveShip("klingon", 1)}
 		>
 			<span className="material-symbols-outlined">
-				arrow_forward
+				arrow_upward
 			</span>
 		</KlingonCard>
 	);

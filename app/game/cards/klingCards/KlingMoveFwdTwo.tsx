@@ -8,10 +8,10 @@ export function KlingMoveTwoFwdCard() {
 	return (
 		<KlingonCard onClick={() => moveShip("klingon", 2)}>
 			<span className="material-symbols-outlined">
-				arrow_forward
+				arrow_upward
 			</span>
 			<span className="material-symbols-outlined">
-				arrow_forward
+				arrow_upward
 			</span>
 		</KlingonCard>
 	);

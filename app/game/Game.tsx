@@ -1,8 +1,8 @@
 import { Board } from "./board/Board";
-import { EntMoveOneFwdCard } from "./cards/EntMoveFwdOne";
-import { EntMoveTwoFwdCard } from "./cards/EntMoveFwdTwo";
-import { EntRotateCCWCard } from "./cards/EntRotateCCW";
-import { EntRotateCWCard } from "./cards/EntRotateCW";
+import { EntMoveOneFwdCard } from "./cards/entCards/EntMoveFwdOne";
+import { EntMoveTwoFwdCard } from "./cards/entCards/EntMoveFwdTwo";
+import { EntRotateCCWCard } from "./cards/entCards/EntRotateCCW";
+import { EntRotateCWCard } from "./cards/entCards/EntRotateCW";
 import { KlingMoveOneFwdCard } from "./cards/klingCards/KlingMoveFwdOne";
 import { KlingMoveTwoFwdCard } from "./cards/klingCards/KlingMoveFwdTwo";
 import { KlingRotateCWCard } from "./cards/klingCards/KlingRotateCW";
@@ -22,7 +22,7 @@ export const GameConfig = {
 }
 
 export function Game() {
-  const { federationShip, klingonShip, activeShip, moveShip, rotateShip, setActiveShip, setFederationShipType } = useGameState();
+  const { federationShip, klingonShip, activeShip, moveShip, rotateShip, setActiveFaction: setActiveShip, setFederationShipType } = useGameState();
   return (
 	<GameStateContext value={{
 	  federationShip,
@@ -30,7 +30,7 @@ export function Game() {
 	  activeShip,
 	  moveShip,
 	  rotateShip,
-	  setActiveShip,
+	  setActiveFaction: setActiveShip,
 	  setFederationShipType,
 	}}>
 		<div 

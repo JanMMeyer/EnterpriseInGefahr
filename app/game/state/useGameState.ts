@@ -1,22 +1,28 @@
 import { useState } from "react";
 import type { GameState, GameStateActions } from "./GameState.type";
-import type { Ship, ShipFaction, ShipOrientation, ShipType } from "../ships/shared/Ship.type";
+import type { Ship, ShipFaction, ShipType } from "../shared/types/Ship.type";
 import { GameConfig } from "../Game";
+import type { SpacialDirection } from "../shared/types/Game.types";
+import type { Pew } from "../shared/types/Pew.type";
+
 
 export function useGameState(): GameState & GameStateActions {
 	const [federationShip, setFederationShip] = useState<Ship>({
 		faction: "federation",
-		position: { x: 1, y: 1 },
+		origin: { x: 1, y: 1 },
 		orientation: "right",
-		type: null
+		type: null,
+		integrity: 100,
 	});
 	const [klingonShip, setKlingonShip] = useState<Ship>({
 		faction: "klingon",
-		position: { x: GameConfig.cols, y: GameConfig.rows },
+		origin: { x: GameConfig.cols, y: GameConfig.rows },
 		orientation: "left",
 		type: "vorCha",
+		integrity: 100,
 	});
 	const [activeShip, setActiveShip] = useState<"federation" | "klingon">("federation");
+	const [pew, setPew] = useState<Pew | null>(null);
 
 	const moveShip = (faction: ShipFaction, numberOfCells: number) => {
 		const setStateFn = faction === "federation" ? setFederationShip : setKlingonShip;
@@ -28,6 +34,18 @@ export function useGameState(): GameState & GameStateActions {
 		updateShipOrientation(setStateFn, direction);
 	};
 
+	const shoot = (shootingFaction: ShipFaction) => {
+		const shootingShip = shootingFaction === "federation" ? federationShip : klingonShip;
+		const targetShip = shootingFaction === "federation" ? klingonShip : federationShip;
+		setPew({
+			origin: shootingShip.origin,
+			orientation: shootingShip.orientation,
+			length: 10,
+		});
+		const opponentShipSetStateFn = shootingFaction === "federation" ?  setKlingonShip : setFederationShip
+
+	}
+
 	const setFederationShipType = (type: ShipType) => {
 		setFederationShip({ ...federationShip, type });
 	};
@@ -36,37 +54,39 @@ export function useGameState(): GameState & GameStateActions {
 		federationShip,
 		klingonShip,
 		activeShip,
+		pew,
 		moveShip,
 		rotateShip,
-		setActiveShip,
+		shoot,
+		setActiveFaction: setActiveShip,
 		setFederationShipType,
 	};
 }
 
 function updateShipPosition(setShip: (stateFn: (prev: Ship) => Ship) => void,  numberOfCells: number) {
 	setShip((ship) => {
-		const newPosition = { ...ship.position };
+		const newPosition = { ...ship.origin };
 		switch (ship.orientation) {
 			case "up":
-				newPosition.y = Math.max(1, ship.position.y - numberOfCells);
+				newPosition.y = Math.max(1, ship.origin.y - numberOfCells);
 				break;
 			case "down":
-				newPosition.y = Math.min(GameConfig.rows, ship.position.y + numberOfCells);
+				newPosition.y = Math.min(GameConfig.rows, ship.origin.y + numberOfCells);
 				break;
 			case "left":		
-				newPosition.x = Math.max(1, ship.position.x - numberOfCells);
+				newPosition.x = Math.max(1, ship.origin.x - numberOfCells);
 				break;
 			case "right":
-				newPosition.x = Math.min(GameConfig.cols, ship.position.x + numberOfCells);
+				newPosition.x = Math.min(GameConfig.cols, ship.origin.x + numberOfCells);
 				break;
 		}
-		return { ...ship, position: newPosition };
+		return { ...ship, origin: newPosition };
 	})
 }
 
 function updateShipOrientation(setShip: (stateFn: (prev: Ship) => Ship) => void, direction: "cw" | "ccw") {
 	setShip((ship) => {
-		let newOrientation: ShipOrientation
+		let newOrientation: SpacialDirection
 		switch (ship.orientation) {
 			case "up":
 				newOrientation = direction === "cw" ? "right" : "left";
