@@ -1,5 +1,4 @@
 import type { OrientedObject, Position, SpacialDirection } from "../types/Game.types";
-import type { Ship } from "../types/Ship.type";
 
 
 export type BoundingBox = {
@@ -14,6 +13,7 @@ export class Intersectable {
 	public readonly orientation: SpacialDirection
 	public readonly length: number
 	public readonly width: number
+	public readonly boundingBox: BoundingBox
 	constructor(
 		props: OrientedObject
 	) {
@@ -21,20 +21,47 @@ export class Intersectable {
 		this.orientation = props.orientation;
 		this.length = props.length ?? 1;
 		this.width = props.width ?? 1;
+		this.boundingBox = Intersectable.getBoundingBox(props)
 	}
+
 	public intersectsWith(other: OrientedObject ): boolean {
-
-		return true;
+		const otherBoundingBox = Intersectable.getBoundingBox(other)
+		return Intersectable.intersects(this.boundingBox, otherBoundingBox)
 	}
 
-	private getBoundingBox(): BoundingBox {
-
-
-		return {
-			minX: this.origin.x - this.length / 2,
-			minY: this.origin.y - this.width / 2,
-			maxX: this.origin.x + this.length / 2,
-			maxY: this.origin.y + this.width / 2,
+	public static getBoundingBox({ origin, orientation, length, width }: OrientedObject): BoundingBox {
+		length = length ?? 1
+		width = width ?? 1
+		let minX: number = origin.x
+		let maxX: number = origin.x 
+		let minY: number = origin.y
+		let maxY: number = origin.y
+		switch (orientation) {
+			case 'up':
+				maxX -= width
+				minY -= length
+			case 'right':
+				maxX += length
+				maxY += width
+			case 'down':
+				maxX += width
+				maxY += length
+			case 'left':
+				minX -= length
+				minY -= width
 		}
+
+		return { minX, maxX, minY, maxY }
+	}
+
+	public static intersects(bb1: BoundingBox, bb2: BoundingBox) {
+		return 	this.isInBoundingBox(bb1, {x: bb2.minX, y: bb2.minY}) ||
+				this.isInBoundingBox(bb1, {x: bb2.minX, y: bb2.maxY}) ||
+				this.isInBoundingBox(bb1, {x: bb2.maxX, y: bb2.minY}) ||
+				this.isInBoundingBox(bb1, {x: bb2.maxX, y: bb2.maxY}) 
+	}
+
+	public static isInBoundingBox(bb: BoundingBox, pos: Position): boolean {
+		return ( bb.minX <= pos.x && pos.x < bb.maxX ) && ( bb.minY <= pos.y && pos.y < bb.maxY )
 	}
 }

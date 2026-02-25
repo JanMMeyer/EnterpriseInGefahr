@@ -4,6 +4,7 @@ import type { Ship, ShipFaction, ShipType } from "../shared/types/Ship.type";
 import { GameConfig } from "../Game";
 import type { SpacialDirection } from "../shared/types/Game.types";
 import type { Pew } from "../shared/types/Pew.type";
+import { Intersectable } from "../shared/utils/Intersectable.class";
 
 
 export function useGameState(): GameState & GameStateActions {
@@ -37,12 +38,19 @@ export function useGameState(): GameState & GameStateActions {
 	const shoot = (shootingFaction: ShipFaction) => {
 		const shootingShip = shootingFaction === "federation" ? federationShip : klingonShip;
 		const targetShip = shootingFaction === "federation" ? klingonShip : federationShip;
-		setPew({
+		const opponentShipSetStateFn = shootingFaction === "federation" ?  setKlingonShip : setFederationShip
+		const pew: Pew = {
 			origin: shootingShip.origin,
 			orientation: shootingShip.orientation,
 			length: 10,
-		});
-		const opponentShipSetStateFn = shootingFaction === "federation" ?  setKlingonShip : setFederationShip
+		} 
+		const pewIntersectable: Intersectable = new Intersectable(pew)
+
+
+		setPew(pew);
+		if (pewIntersectable.intersectsWith(targetShip)) {
+			alert('ship hit')
+		}
 
 	}
 

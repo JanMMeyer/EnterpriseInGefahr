@@ -1,5 +1,6 @@
 import { Board } from "./board/Board";
 import { EntMoveOneFwdCard } from "./cards/entCards/EntMoveFwdOne";
+import { EntShootCard } from "./cards/entCards/EntShoot";
 import { EntMoveTwoFwdCard } from "./cards/entCards/EntMoveFwdTwo";
 import { EntRotateCCWCard } from "./cards/entCards/EntRotateCCW";
 import { EntRotateCWCard } from "./cards/entCards/EntRotateCW";
@@ -22,19 +23,21 @@ export const GameConfig = {
 }
 
 export function Game() {
-  const { federationShip, klingonShip, activeShip, moveShip, rotateShip, setActiveFaction: setActiveShip, setFederationShipType } = useGameState();
+  const { federationShip, klingonShip, activeShip, pew, moveShip, rotateShip, shoot, setActiveFaction, setFederationShipType } = useGameState();
   return (
 	<GameStateContext value={{
 	  federationShip,
 	  klingonShip,
 	  activeShip,
+	  pew,
 	  moveShip,
 	  rotateShip,
-	  setActiveFaction: setActiveShip,
+	  shoot,
+	  setActiveFaction,
 	  setFederationShipType,
 	}}>
 		<div 
-			className="relative grid grid-cols-[auto_auto_auto] items-center gap-2 h-full bg-cyan-700"
+			className="relative grid grid-cols-[auto_auto_auto] items-center gap-2 p-3 h-full bg-cyan-700"
 			style={{ minWidth: GameConfig.cols * GameConfig.cellSize + 200 }}
 		>
 			<CardArea>
@@ -42,6 +45,7 @@ export function Game() {
 				<EntMoveTwoFwdCard />
 				<EntRotateCWCard />
 				<EntRotateCCWCard />
+				<EntShootCard />
 			</CardArea>
 			<Board>
 				<FederationShip />
