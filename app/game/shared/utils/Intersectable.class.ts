@@ -38,17 +38,21 @@ export class Intersectable {
 		let maxY: number = origin.y
 		switch (orientation) {
 			case 'up':
-				maxX -= width
+				maxX += width
 				minY -= length
+				break
 			case 'right':
 				maxX += length
 				maxY += width
+				break
 			case 'down':
 				maxX += width
 				maxY += length
+				break
 			case 'left':
 				minX -= length
-				minY -= width
+				maxY += width
+				break
 		}
 
 		return { minX, maxX, minY, maxY }

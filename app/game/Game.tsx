@@ -15,6 +15,7 @@ import { FederationShip } from "./ships/FederationShip";
 import { KlingonShip } from "./ships/KlingonShip";
 import { GameStateContext } from "./state/GameStateContext";
 import { useGameState } from "./state/useGameState";
+import { Pew } from "./shared/components/Pew";
 
 export const GameConfig = {
   cols: 16,
@@ -50,6 +51,7 @@ export function Game() {
 			<Board>
 				<FederationShip />
 				<KlingonShip />
+				<Pew />
 			</Board>
 			<CardArea>
 				<KlingMoveOneFwdCard />

@@ -23,9 +23,17 @@ export function Board({ children }: BoardProps) {
 		}}
 	  >
 		{cells.map((i) => (
-		  <div key={i} className="border border-pink-500/50" />
+		  <div key={i} className="border border-pink-500/50 text-white text-xs"  style={{ gridColumnStart: getColumnFromIndex(i, cols), gridRowStart: getRowFromIndex(i, cols) }}>
+			{/* column: {getColumnFromIndex(i, cols)}, row: {getRowFromIndex(i, cols)}, index: {i} */}
+		  </div>
 		))}
 		{children}
 	  </div>
 	);	
+  }
+  function getColumnFromIndex(index: number, cols: number) {
+	return ((index) % cols) + 1;
+  }
+  function getRowFromIndex(index: number, cols: number) {
+	return Math.floor(index / cols) + 1;
   }

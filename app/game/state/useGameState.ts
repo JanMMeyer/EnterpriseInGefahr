@@ -40,17 +40,32 @@ export function useGameState(): GameState & GameStateActions {
 		const targetShip = shootingFaction === "federation" ? klingonShip : federationShip;
 		const opponentShipSetStateFn = shootingFaction === "federation" ?  setKlingonShip : setFederationShip
 		const pew: Pew = {
+			shootingFaction,
 			origin: shootingShip.origin,
 			orientation: shootingShip.orientation,
-			length: 10,
+			length: 5,
 		} 
 		const pewIntersectable: Intersectable = new Intersectable(pew)
 
+		if (pewIntersectable.intersectsWith(targetShip)) {
+			switch (shootingShip.orientation) {
+				case "right":
+					pew.length = pew.origin.x - targetShip.origin.x;
+					break;
+				case "left":
+					pew.length = targetShip.origin.x - pew.origin.x;
+					break;
+				case "up":
+					pew.length = pew.origin.y - targetShip.origin.y;
+					break;
+				case "down":
+					pew.length = targetShip.origin.y - pew.origin.y;
+					break;
+			}
+		}
 
 		setPew(pew);
-		if (pewIntersectable.intersectsWith(targetShip)) {
-			alert('ship hit')
-		}
+
 
 	}
 
