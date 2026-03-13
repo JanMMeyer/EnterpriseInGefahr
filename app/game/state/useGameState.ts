@@ -67,7 +67,7 @@ export function useGameState(): GameState & GameStateActions {
 
 	//after pew has settled sets ship to kaputt if integrity is 0
 	useEffect(() => {
-		if (federationShip.integrity <= 0) {
+		if (federationShip.integrity <= 0 && federationShip.type && klingonShip.type !== "kaputt") {
 			setTimeout(() => {
 				setFederationShip({ ...federationShip, type: "kaputt" });
 			}, 700);
@@ -75,7 +75,7 @@ export function useGameState(): GameState & GameStateActions {
 				setFederationShip({ ...federationShip, type: null });
 			}, 2000);
 		}
-		if (klingonShip.integrity <= 0) {
+		if (klingonShip.integrity <= 0 && klingonShip.type  && klingonShip.type !== "kaputt") {
 			setTimeout(() => {
 			setKlingonShip({ ...klingonShip, type: "kaputt" });
 			}, 700);
