@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { GameState, GameStateActions } from "./GameState.type";
 import type { Ship, ShipFaction, ShipType } from "../shared/types/Ship.type";
 import { GameConfig } from "../Game";
@@ -48,30 +48,42 @@ export function useGameState(): GameState & GameStateActions {
 		const pewIntersectable: Intersectable = new Intersectable(pew)
 
 		if (pewIntersectable.intersectsWith(targetShip)) {
-			switch (shootingShip.orientation) {
-				case "right":
-					pew.length = pew.origin.x - targetShip.origin.x;
-					break;
-				case "left":
-					pew.length = targetShip.origin.x - pew.origin.x;
-					break;
-				case "up":
-					pew.length = pew.origin.y - targetShip.origin.y;
-					break;
-				case "down":
-					pew.length = targetShip.origin.y - pew.origin.y;
-					break;
-			}
+			opponentShipSetStateFn({ ...targetShip, integrity: targetShip.integrity - 50 });
 		}
-
 		setPew(pew);
-
-
 	}
 
 	const setFederationShipType = (type: ShipType) => {
 		setFederationShip({ ...federationShip, type });
 	};
+
+
+	//removes pew after 1 second
+	useEffect(() => {
+		if (pew !== null) setTimeout(() => {
+			setPew(null);
+		}, 750);
+	}, [pew]);
+
+	//after pew has settled sets ship to kaputt if integrity is 0
+	useEffect(() => {
+		if (federationShip.integrity <= 0) {
+			setTimeout(() => {
+				setFederationShip({ ...federationShip, type: "kaputt" });
+			}, 700);
+			setTimeout(() => {
+				setFederationShip({ ...federationShip, type: null });
+			}, 2000);
+		}
+		if (klingonShip.integrity <= 0) {
+			setTimeout(() => {
+			setKlingonShip({ ...klingonShip, type: "kaputt" });
+			}, 700);
+			setTimeout(() => {
+				setKlingonShip({ ...klingonShip, type: null });
+			}, 2000);
+		}
+	}, [federationShip.integrity, klingonShip.integrity]);
 
 	return {
 		federationShip,

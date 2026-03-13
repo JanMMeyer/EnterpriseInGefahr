@@ -9,24 +9,11 @@ export function Pew() {
 	const horizontal = pew.orientation === 'right' || pew.orientation === 'left';
 	const targetShip = pew.shootingFaction === "federation" ? klingonShip : federationShip;
 	// const opponentShipSetStateFn = shootingFaction === "federation" ?  setKlingonShip : setFederationShip
-	if (new Intersectable(pew).intersectsWith(targetShip)) {
-		switch (pew.orientation) {
-			case "right":
-				pew.length = pew.origin.x - targetShip.origin.x;
-				break;
-			case "left":
-				pew.length = targetShip.origin.x - pew.origin.x;
-				break;
-			case "up":
-				pew.length = pew.origin.y - targetShip.origin.y;
-				break;
-			case "down":
-				pew.length = targetShip.origin.y - pew.origin.y;
-				break;
-		}
+	if (new Intersectable(pew).intersectsWith(targetShip)) {		
+		pew.length = horizontal ? Math.abs(targetShip.origin.x - pew.origin.x) : Math.abs(targetShip.origin.y - pew.origin.y);
 	}
 
-	const {minX, maxX, minY, maxY} = intersectablePew.boundingBox;
+	const {minX, maxX, minY, maxY} = new Intersectable(pew).boundingBox;
 
 
 	const gridPosition = {
