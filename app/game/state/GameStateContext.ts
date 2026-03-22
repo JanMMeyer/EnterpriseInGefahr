@@ -6,6 +6,7 @@ export const GameStateContext = createContext<GameState & GameStateActions>({
   klingonShip: { faction: "klingon",type: "vorCha", origin: { x: 1, y: 1 }, orientation: "left", integrity: 100 },
   activeShip: "federation",
   pew: null,
+  winner: null,
   moveShip: () => {},
   rotateShip: () => {},
   shoot: () => {},

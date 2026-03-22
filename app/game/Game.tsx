@@ -10,12 +10,14 @@ import { KlingRotateCWCard } from "./cards/klingCards/KlingRotateCW";
 import { KlingRotateCCWCard } from "./cards/klingCards/KlingtRotateCCW";
 import { CardArea } from "./cards/shared/CardArea";
 import { ShipPicker } from "./shipPicker/ShipPicker";
+import { GameOverOverlay } from "./gameOver/GameOverOverlay";
 
 import { FederationShip } from "./ships/FederationShip";
 import { KlingonShip } from "./ships/KlingonShip";
 import { GameStateContext } from "./state/GameStateContext";
 import { useGameState } from "./state/useGameState";
 import { Pew } from "./shared/components/Pew";
+import { KlingonShootCard } from "./cards/klingCards/KlingShoot";
 
 export const GameConfig = {
   cols: 16,
@@ -24,13 +26,14 @@ export const GameConfig = {
 }
 
 export function Game() {
-  const { federationShip, klingonShip, activeShip, pew, moveShip, rotateShip, shoot, setActiveFaction, setFederationShipType } = useGameState();
+  const { federationShip, klingonShip, activeShip, pew, winner, moveShip, rotateShip, shoot, setActiveFaction, setFederationShipType } = useGameState();
   return (
 	<GameStateContext value={{
 	  federationShip,
 	  klingonShip,
 	  activeShip,
 	  pew,
+	  winner,
 	  moveShip,
 	  rotateShip,
 	  shoot,
@@ -58,8 +61,10 @@ export function Game() {
 				<KlingMoveTwoFwdCard />
 				<KlingRotateCWCard />
 				<KlingRotateCCWCard />
+				<KlingonShootCard />
 			</CardArea>
 			<ShipPicker open={federationShip.type === null} />
+			<GameOverOverlay />
 		</div>
 	</GameStateContext>
   );

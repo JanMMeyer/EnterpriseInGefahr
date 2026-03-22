@@ -1,5 +1,4 @@
 import { GameConfig } from "../Game";
-import { FederationShip } from "../ships/FederationShip";
 
 export type BoardProps = {
  children: React.ReactNode;
@@ -12,7 +11,7 @@ export function Board({ children }: BoardProps) {
   
 	return (
 	  <div
-		className="grid size-fit border border-pink-500/50"
+		className="grid size-fit"
 		style={{
 		  gridTemplateColumns: `repeat(${cols}, ${cellSize}px)`,
 		  gridTemplateRows: `repeat(${rows}, ${cellSize}px)`,
@@ -23,7 +22,7 @@ export function Board({ children }: BoardProps) {
 		}}
 	  >
 		{cells.map((i) => (
-		  <div key={i} className="border border-pink-500/50 text-white text-xs"  style={{ gridColumnStart: getColumnFromIndex(i, cols), gridRowStart: getRowFromIndex(i, cols) }}>
+		  <div key={i} className="border border-pink-300/30 text-white text-xs"  style={{ gridColumnStart: getColumnFromIndex(i, cols), gridRowStart: getRowFromIndex(i, cols) }}>
 			{/* column: {getColumnFromIndex(i, cols)}, row: {getRowFromIndex(i, cols)}, index: {i} */}
 		  </div>
 		))}

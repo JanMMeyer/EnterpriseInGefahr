@@ -10,29 +10,37 @@ import { Intersectable } from "../shared/utils/Intersectable.class";
 export function useGameState(): GameState & GameStateActions {
 	const [federationShip, setFederationShip] = useState<Ship>({
 		faction: "federation",
-		origin: { x: 1, y: 1 },
+		origin: { x: 6, y: 6 },
 		orientation: "right",
 		type: null,
 		integrity: 100,
 	});
 	const [klingonShip, setKlingonShip] = useState<Ship>({
 		faction: "klingon",
-		origin: { x: GameConfig.cols, y: GameConfig.rows },
+		// origin: { x: GameConfig.cols, y: GameConfig.rows },
+		origin: { x: 9, y: 6 },
 		orientation: "left",
 		type: "vorCha",
 		integrity: 100,
 	});
-	const [activeShip, setActiveShip] = useState<"federation" | "klingon">("federation");
+	const [activeShip, setActiveShip] = useState<ShipFaction | null>('federation');
 	const [pew, setPew] = useState<Pew | null>(null);
+	const [winner, setWinner] = useState<ShipFaction | null>(null);
+
+	const toggleTurn = () => {
+		setActiveShip((prev) => (prev === "federation" ? "klingon" : "federation"));
+	};
 
 	const moveShip = (faction: ShipFaction, numberOfCells: number) => {
 		const setStateFn = faction === "federation" ? setFederationShip : setKlingonShip;
 		updateShipPosition(setStateFn, numberOfCells);
+		toggleTurn();
 	};
 
 	const rotateShip = (faction: ShipFaction, direction: "cw" | "ccw") => {
 		const setStateFn = faction === "federation" ? setFederationShip : setKlingonShip;
 		updateShipOrientation(setStateFn, direction);
+		toggleTurn();
 	};
 
 	const shoot = (shootingFaction: ShipFaction) => {
@@ -51,6 +59,7 @@ export function useGameState(): GameState & GameStateActions {
 			opponentShipSetStateFn({ ...targetShip, integrity: targetShip.integrity - 50 });
 		}
 		setPew(pew);
+		toggleTurn();
 	}
 
 	const setFederationShipType = (type: ShipType) => {
@@ -58,30 +67,40 @@ export function useGameState(): GameState & GameStateActions {
 	};
 
 
-	//removes pew after 1 second
+	//removes pew after 500ms
 	useEffect(() => {
 		if (pew !== null) setTimeout(() => {
 			setPew(null);
-		}, 750);
+		}, 600);
 	}, [pew]);
 
-	//after pew has settled sets ship to kaputt if integrity is 0
+	//after pew has settled, if integrity is 0, sets ship to blasted and active faction to null, then removes ship and sets winner
 	useEffect(() => {
-		if (federationShip.integrity <= 0 && federationShip.type && klingonShip.type !== "kaputt") {
-			setTimeout(() => {
-				setFederationShip({ ...federationShip, type: "kaputt" });
-			}, 700);
-			setTimeout(() => {
-				setFederationShip({ ...federationShip, type: null });
-			}, 2000);
+		let winner: ShipFaction | null = null;
+		let setShipState: (stateFn: (prev: Ship) => Ship) => void = () => {};
+		if (federationShip.integrity <= 0 && federationShip.type && federationShip.type !== "blasted") {
+			winner = "klingon";
+			setShipState = setFederationShip;
+		} else if (klingonShip.integrity <= 0 && klingonShip.type && klingonShip.type !== "blasted") {
+			winner = "federation";
+			setShipState = setKlingonShip;
 		}
-		if (klingonShip.integrity <= 0 && klingonShip.type  && klingonShip.type !== "kaputt") {
-			setTimeout(() => {
-			setKlingonShip({ ...klingonShip, type: "kaputt" });
-			}, 700);
-			setTimeout(() => {
-				setKlingonShip({ ...klingonShip, type: null });
+
+		if (winner) {
+			console.log("ship is blasted");
+			setActiveShip(null);
+			const blastTimeout = setTimeout(() => {
+				setShipState((ship: Ship) => ({ ...ship, type: "blasted" }));
+			}, 550);
+			const goBackTimeout = setTimeout(() => {
+				setShipState((ship: Ship) => ({ ...ship, type: null }));
 			}, 2000);
+			const winnerTimeout = setTimeout(() => setWinner(winner), 2500);
+			return () => {
+				clearTimeout(blastTimeout)
+				clearTimeout(goBackTimeout)
+				clearTimeout(winnerTimeout)
+			};
 		}
 	}, [federationShip.integrity, klingonShip.integrity]);
 
@@ -90,6 +109,7 @@ export function useGameState(): GameState & GameStateActions {
 		klingonShip,
 		activeShip,
 		pew,
+		winner,
 		moveShip,
 		rotateShip,
 		shoot,
