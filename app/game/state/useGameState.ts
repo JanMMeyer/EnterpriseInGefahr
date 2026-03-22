@@ -10,15 +10,15 @@ import { Intersectable } from "../shared/utils/Intersectable.class";
 export function useGameState(): GameState & GameStateActions {
 	const [federationShip, setFederationShip] = useState<Ship>({
 		faction: "federation",
-		origin: { x: 6, y: 6 },
+		origin: { x: 1, y: 1 },
 		orientation: "right",
 		type: null,
 		integrity: 100,
 	});
 	const [klingonShip, setKlingonShip] = useState<Ship>({
 		faction: "klingon",
-		// origin: { x: GameConfig.cols, y: GameConfig.rows },
-		origin: { x: 9, y: 6 },
+		origin: { x: GameConfig.cols, y: GameConfig.rows },
+		// origin: { x: 9, y: 6 },
 		orientation: "left",
 		type: "vorCha",
 		integrity: 100,
