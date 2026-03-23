@@ -13,7 +13,9 @@ export function useGameState(): GameState & GameStateActions {
 		origin: { x: 1, y: 1 },
 		orientation: "right",
 		type: null,
-		integrity: 100,
+		integrity: 10,
+		shields: 0,
+		weaponDamage: 5,
 	});
 	const [klingonShip, setKlingonShip] = useState<Ship>({
 		faction: "klingon",
@@ -21,7 +23,9 @@ export function useGameState(): GameState & GameStateActions {
 		// origin: { x: 9, y: 6 },
 		orientation: "left",
 		type: "vorCha",
-		integrity: 100,
+		integrity: 10,
+		shields: 0,
+		weaponDamage: 5,
 	});
 	const [activeShip, setActiveShip] = useState<ShipFaction | null>('federation');
 	const [pew, setPew] = useState<Pew | null>(null);
@@ -43,6 +47,12 @@ export function useGameState(): GameState & GameStateActions {
 		toggleTurn();
 	};
 
+	const raiseShields = (faction: ShipFaction) => {
+		const setStateFn = faction === "federation" ? setFederationShip : setKlingonShip;
+		setStateFn((ship) => ({ ...ship, shields: ship.shields + 5 }));
+		toggleTurn();
+	};
+
 	const shoot = (shootingFaction: ShipFaction) => {
 		const shootingShip = shootingFaction === "federation" ? federationShip : klingonShip;
 		const targetShip = shootingFaction === "federation" ? klingonShip : federationShip;
@@ -56,7 +66,10 @@ export function useGameState(): GameState & GameStateActions {
 		const pewIntersectable: Intersectable = new Intersectable(pew)
 
 		if (pewIntersectable.intersectsWith(targetShip)) {
-			opponentShipSetStateFn({ ...targetShip, integrity: targetShip.integrity - 50 });
+			const nextShields = Math.max(0, targetShip.shields - shootingShip.weaponDamage);
+			const netDamage = Math.max(0, shootingShip.weaponDamage - targetShip.shields);
+			const nextIntegrity = Math.max(0, targetShip.integrity - netDamage);
+			opponentShipSetStateFn({ ...targetShip, shields: nextShields, integrity: nextIntegrity });
 		}
 		setPew(pew);
 		toggleTurn();
@@ -113,6 +126,7 @@ export function useGameState(): GameState & GameStateActions {
 		moveShip,
 		rotateShip,
 		shoot,
+		raiseShields,
 		setActiveFaction: setActiveShip,
 		setFederationShipType,
 	};

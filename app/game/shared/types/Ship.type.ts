@@ -7,4 +7,6 @@ export type Ship = OrientedObject & {
 	faction: ShipFaction;
 	type: ShipType | null;
 	integrity: number;
+	shields: number;
+	weaponDamage: number;
 }

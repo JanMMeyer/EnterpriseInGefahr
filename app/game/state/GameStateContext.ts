@@ -10,6 +10,7 @@ export const GameStateContext = createContext<GameState & GameStateActions>({
   moveShip: () => {},
   rotateShip: () => {},
   shoot: () => {},
+  raiseShields: () => {},
   setActiveFaction: () => {},
   setFederationShipType: () => {},
 });
