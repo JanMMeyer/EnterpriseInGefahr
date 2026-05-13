@@ -1,0 +1,1 @@
+export type CardType = "MoveOneFwd" | "MoveTwoFwd" | "RotateCW" | "RotateCCW" | "Shoot" | "RaiseShields"

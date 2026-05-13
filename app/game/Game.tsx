@@ -16,10 +16,9 @@ import { FederationShip } from "./ships/FederationShip";
 import { KlingonShip } from "./ships/KlingonShip";
 import { GameStateContext } from "./state/GameStateContext";
 import { useGameState } from "./state/useGameState";
-import { Pew } from "./shared/components/Pew";
-import { KlingonShootCard } from "./cards/klingCards/KlingShoot";
-import { EntRaiseShieldsCard } from "./cards/entCards/EntRaiseShields";
-import { KlingRaiseShieldsCard } from "./cards/klingCards/KlingRaiseShields";
+import { Pew } from "./shared/components/Pew"
+import { EntCardFactory } from "./cards/entCards/EntCardFactory";
+import { KlingCardFactory } from "./cards/klingCards/KlingCardFactory";
 
 export const GameConfig = {
   cols: 16,
@@ -28,44 +27,21 @@ export const GameConfig = {
 }
 
 export function Game() {
-  const {
-	federationShip,
-	klingonShip,
-	activeShip,
-	pew,
-	winner,
-	moveShip,
-	rotateShip,
-	shoot,
-	raiseShields,
-	setActiveFaction,
-	setFederationShipType,
-} = useGameState();
+const gameState = useGameState();
   return (
-	<GameStateContext value={{
-	  federationShip,
-	  klingonShip,
-	  activeShip,
-	  pew,
-	  winner,
-	  moveShip,
-	  rotateShip,
-	  shoot,
-	  raiseShields,
-	  setActiveFaction,
-	  setFederationShipType,
-	}}>
+	<GameStateContext value={ gameState }>
 		<div 
 			className="relative grid grid-cols-[auto_auto_auto] items-center gap-2 p-3 h-full bg-cyan-700"
 			style={{ minWidth: GameConfig.cols * GameConfig.cellSize + 200 }}
 		>
 			<CardArea>
-				<EntMoveOneFwdCard />
+				{gameState.federationHand.map((card) => <EntCardFactory cardType={card} />)}
+				{/* <EntMoveOneFwdCard />
 				<EntMoveTwoFwdCard />
 				<EntRotateCWCard />
 				<EntRotateCCWCard />
 				<EntShootCard />
-				<EntRaiseShieldsCard />
+				<EntRaiseShieldsCard /> */}
 			</CardArea>
 			<Board>
 				<FederationShip />
@@ -73,14 +49,15 @@ export function Game() {
 				<Pew />
 			</Board>
 			<CardArea>
-				<KlingMoveOneFwdCard />
+				{gameState.klingonHand.map((card) => <KlingCardFactory cardType={card} />)}
+				{/* <KlingMoveOneFwdCard />
 				<KlingMoveTwoFwdCard />
 				<KlingRotateCWCard />
 				<KlingRotateCCWCard />
 				<KlingonShootCard />
-				<KlingRaiseShieldsCard />
+				<KlingRaiseShieldsCard /> */}
 			</CardArea>
-			<ShipPicker open={federationShip.type === null} />
+			<ShipPicker open={gameState.federationShip.type === null} />
 			<GameOverOverlay />
 		</div>
 	</GameStateContext>

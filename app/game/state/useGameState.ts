@@ -5,9 +5,33 @@ import { GameConfig } from "../Game";
 import type { SpacialDirection } from "../shared/types/Game.types";
 import type { Pew } from "../shared/types/Pew.type";
 import { Intersectable } from "../shared/utils/Intersectable.class";
+import type { CardType } from "../cards/shared/Card.type";
 
+const initialDrawPile: CardType[] = [
+	"MoveOneFwd",
+	"MoveOneFwd",
+	"MoveOneFwd",
+	"MoveOneFwd",
+	"MoveTwoFwd",
+	"MoveTwoFwd",
+	"RotateCW",
+	"RotateCW",
+	"RotateCCW",
+	"RotateCCW",
+	"Shoot",
+	"Shoot",
+	"RaiseShields",
+];
 
 export function useGameState(): GameState & GameStateActions {
+	const [federationDrawPile, setFederationDrawPile] = useState<CardType[]>(initialDrawPile);
+	const [klingonDrawPile, setKlingonDrawPile] = useState<CardType[]>(initialDrawPile);
+	const [federationHand, setFederationHand] = useState<CardType[]>([]);
+	const [klingonHand, setKlingonHand] = useState<CardType[]>([]);
+	const [federationDiscardPile, setFederationDiscardPile] = useState<CardType[]>([]);
+	const [klingonDiscardPile, setKlingonDiscardPile] = useState<CardType[]>([]);
+
+
 	const [federationShip, setFederationShip] = useState<Ship>({
 		faction: "federation",
 		origin: { x: 1, y: 1 },
@@ -30,6 +54,20 @@ export function useGameState(): GameState & GameStateActions {
 	const [activeShip, setActiveShip] = useState<ShipFaction | null>('federation');
 	const [pew, setPew] = useState<Pew | null>(null);
 	const [winner, setWinner] = useState<ShipFaction | null>(null);
+
+	const shuffleDrawPile = (faction: ShipFaction) => {
+		const drawPile = faction === "federation" ? federationDrawPile : klingonDrawPile;
+		const setDrawPile = faction === "federation" ? setFederationDrawPile : setKlingonDrawPile;
+		const shuffledDrawPile = drawPile.sort(() => Math.random() - 0.5);
+		setDrawPile(shuffledDrawPile);
+	}
+
+	const drawHand = (faction: ShipFaction) => {
+		const drawPile = faction === "federation" ? federationDrawPile : klingonDrawPile;
+		const setHand = faction === "federation" ? setFederationHand : setKlingonHand;
+		const hand = drawPile.splice(0, 4);
+		setHand(hand);
+	}
 
 	const toggleTurn = () => {
 		setActiveShip((prev) => (prev === "federation" ? "klingon" : "federation"));
@@ -79,15 +117,22 @@ export function useGameState(): GameState & GameStateActions {
 		setFederationShip({ ...federationShip, type });
 	};
 
+	// initially shuffles and draws hands
+	useEffect(() => {
+		shuffleDrawPile("federation");
+		shuffleDrawPile("klingon");
+		drawHand("federation");
+		drawHand("klingon");
+	}, []);
 
-	//removes pew after 500ms
+	// removes pew after 500ms
 	useEffect(() => {
 		if (pew !== null) setTimeout(() => {
 			setPew(null);
 		}, 600);
 	}, [pew]);
 
-	//after pew has settled, if integrity is 0, sets ship to blasted and active faction to null, then removes ship and sets winner
+	// after pew has settled, if integrity is 0, sets ship to blasted and active faction to null, then removes ship and sets winner
 	useEffect(() => {
 		let winner: ShipFaction | null = null;
 		let setShipState: (stateFn: (prev: Ship) => Ship) => void = () => {};
@@ -118,11 +163,19 @@ export function useGameState(): GameState & GameStateActions {
 	}, [federationShip.integrity, klingonShip.integrity]);
 
 	return {
+		federationDrawPile,
+		klingonDrawPile,
+		federationHand,
+		klingonHand,
+		federationDiscardPile,
+		klingonDiscardPile,
 		federationShip,
 		klingonShip,
 		activeShip,
 		pew,
 		winner,
+		shuffleDrawPile,
+		drawHand,
 		moveShip,
 		rotateShip,
 		shoot,
